@@ -1,0 +1,32 @@
+''' 
+    Install Blue Ocean Plugin
+    java -jar jenkins-cli.jar install-plugin blueocean
+    
+'''
+pipeline {
+    agent {
+        docker 'node:14'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+    stages('parallel Tests') {
+        parallel {
+            stage('Unit test') {
+                steps {
+                    sh 'npm test'
+                }
+            stage('linting') {
+                steps { 
+                    sh 'npm run lint'
+                }
+            }
+            }
+        }
+    }
+
+    }
+}
